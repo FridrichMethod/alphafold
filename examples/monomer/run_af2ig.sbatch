@@ -14,7 +14,7 @@ source ./envs.sh
 
 nvidia-smi
 
-sh ./af2ig.sh ./complex.fasta ./complex &
+sh ./monomers.sh &
 
 sleep 180s
 nvidia-smi

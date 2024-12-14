@@ -12,5 +12,6 @@ python ../../run_af2ig.py \
     --fasta_path=./monomers.fasta \
     --output_dir=./monomers \
     --random_seed=0 \
-    --msa_dir=./msas \
-    --template_dir=./templates
+    --msa_dir=./msas
+
+# --template_dir=./templates
