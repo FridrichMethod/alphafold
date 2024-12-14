@@ -784,6 +784,7 @@ class Af2Ig:
         prediction_result = _jnp_to_np(dict(prediction_result))
 
         # Save the model outputs
+        os.makedirs(output_dir, exist_ok=True)
         result_output_path = os.path.join(output_dir, f"result_{domain_name}.pkl")
         logging.info("Saving results to %s", result_output_path)
         with open(result_output_path, "wb") as f:
@@ -854,7 +855,6 @@ def main(args):
         data_pipeline = DataPipeline(msa_dir, template_dir)
 
     # load sequences
-    os.makedirs(output_dir, exist_ok=True)
     for record in SeqIO.parse(fasta_path, "fasta"):
         sequences = str(record.seq)
         domain_name = record.id
