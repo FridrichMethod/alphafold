@@ -661,9 +661,9 @@ class DataPipelineMultimer:
     def __init__(
         self,
         precalc_dir: str,
-        msa_dir_name: str = "msas",
-        template_dir_name: str = "templates",
-        pairing_msa_dir_name: str = "pairing_msas",
+        msa_dir_name: str = "",
+        template_dir_name: str = "",
+        pairing_msa_dir_name: str = "",
     ):
         """Create a data pipeline object for a multimer."""
         self.precalc_dir = precalc_dir
@@ -887,9 +887,9 @@ if __name__ == "__main__":
 
     # Multimer arguments
     parser.add_argument("--precalc_dir", type=str, default="")
-    parser.add_argument("--msa_dir_name", type=str, default="msas")
-    parser.add_argument("--template_dir_name", type=str, default="templates")
-    parser.add_argument("--pairing_msa_dir_name", type=str, default="pairing_msas")
+    parser.add_argument("--msa_dir_name", type=str, default="")
+    parser.add_argument("--template_dir_name", type=str, default="")
+    parser.add_argument("--pairing_msa_dir_name", type=str, default="")
 
     args = parser.parse_args()
 
