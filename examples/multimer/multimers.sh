@@ -14,6 +14,7 @@ python ../../run_af2ig.py \
     --random_seed=0 \
     --precalc_dir=./precalc \
     --msa_dir_name=msas \
-    --pairing_msa_dir_name=pairing_msas
+    --pairing_msa_dir_name=pairing_msas \
+    --verbose
 
 # --template_dir_name=templates \

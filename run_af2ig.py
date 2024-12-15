@@ -38,7 +38,6 @@ from alphafold.data import (
 from alphafold.data.tools import hhsearch, kalign
 from alphafold.model import config, data, model
 
-logging.set_verbosity(logging.INFO)
 
 GeneralFeatureDict = MutableMapping[str, list[Any]]
 
@@ -829,6 +828,9 @@ class Af2Ig:
 def main(args):
     """Runs AlphaFold2 initial guess for monomer and multimer prediction."""
 
+    # Set logging level
+    logging.set_verbosity(logging.INFO if args.verbose else logging.ERROR)
+
     # General arguments
     model_name = args.model_name
     data_dir = args.data_dir
@@ -880,6 +882,7 @@ if __name__ == "__main__":
     parser.add_argument("--fasta_path", type=str, required=True)
     parser.add_argument("--output_dir", type=str, required=True)
     parser.add_argument("--random_seed", type=int, default=0)
+    parser.add_argument("--verbose", action="store_true")
 
     # Monomer arguments
     parser.add_argument("--msa_dir", type=str, default="")
