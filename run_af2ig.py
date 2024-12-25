@@ -38,7 +38,6 @@ from alphafold.data import (
 from alphafold.data.tools import hhsearch, kalign
 from alphafold.model import config, data, model
 
-
 GeneralFeatureDict = MutableMapping[str, list[Any]]
 
 
@@ -68,7 +67,7 @@ def run_msa_tool(
     return result
 
 
-def _make_msa_features_from_file(
+def _make_msa_features_from_files(
     msa_dir: str,
     uniref_max_hits: int = 10000,
     mgnify_max_hits: int = 501,
@@ -233,7 +232,7 @@ def _msa_to_indices_hit(msa: parsers.Msa) -> list[np.ndarray]:
     return indices_hit_list
 
 
-def _make_template_features_from_file(
+def _make_template_features_from_files(
     sequence: str,
     template_path: str,
     template_searcher: hhsearch.HHSearch,
@@ -406,8 +405,9 @@ def make_template_features(
 
     # Create empty template features
     num_res = len(sequence)
-    if is_multimer:
-        empty_template_features = {
+
+    empty_template_features: pipeline.FeatureDict = (
+        {
             "template_aatype": np.zeros(
                 (1, num_res, len(residue_constants.restypes_with_x_and_gap)), np.float32
             ),
@@ -421,11 +421,12 @@ def make_template_features(
             "template_sequence": np.array(["".encode()], dtype=object),
             "template_sum_probs": np.array([0], dtype=np.float32),
         }
-    else:
-        empty_template_features: pipeline.FeatureDict = {
-            key: np.array([], dtype=templates.TEMPLATE_FEATURES[key])
-            for key in templates.TEMPLATE_FEATURES
+        if is_multimer
+        else {
+            name: np.array([], dtype=dtype)
+            for name, dtype in templates.TEMPLATE_FEATURES.items()
         }
+    )
 
     # Check if self.template_features_for_all is empty
     if not template_features_for_all:
@@ -634,7 +635,7 @@ def _make_all_chain_features_for_all(
     all_chain_features_for_all = {}
     for chain_id in protein.PDB_CHAIN_IDS:
         if not os.path.isdir(os.path.join(precalc_dir, chain_id)):
-            break
+            continue
 
         # Get paths for MSA, template and pairing MSA directories
         dirs = {
@@ -689,25 +690,23 @@ class DataPipelineMultimer:
         sequence_features: dict[str, pipeline.FeatureDict] = {}
         is_homomer_or_monomer = len(set(seqs_list)) == 1
         for chain_id, sequence in zip(self.all_chain_features_for_all, seqs_list):
+            logging.info("Processing chain %s", chain_id)
             if sequence in sequence_features:
                 all_chain_features[chain_id] = copy.deepcopy(
                     sequence_features[sequence]
                 )
                 continue
-            logging.info("Processing chain %s", chain_id)
             feature_dict = self.all_chain_features_for_all[
                 chain_id
             ].process_single_chain(sequence, domain_name, is_homomer_or_monomer)
             chain_features = pipeline_multimer.convert_monomer_features(
-                feature_dict, chain_id=chain_id
+                feature_dict, chain_id
             )
             all_chain_features[chain_id] = chain_features
             sequence_features[sequence] = chain_features
 
         all_chain_features = pipeline_multimer.add_assembly_features(all_chain_features)  # type: ignore
-        np_example = feature_processing.pair_and_merge(
-            all_chain_features=all_chain_features
-        )
+        np_example = feature_processing.pair_and_merge(all_chain_features)
 
         # Pad MSA to avoid zero-sized extra_msa
         feature_dict_multimer = pipeline_multimer.pad_msa(np_example, 512)
@@ -808,6 +807,10 @@ class Af2Ig:
         plddt_b_factors = np.repeat(
             plddt[:, None], residue_constants.atom_type_num, axis=-1
         )
+
+        # Adjust chain id to start from 0
+        # See https://github.com/google-deepmind/alphafold/issues/251
+        processed_feature_dict["asym_id"] -= 1  # type: ignore
 
         # Save the prediction as a PDB file
         unrelaxed_protein = protein.from_prediction(
