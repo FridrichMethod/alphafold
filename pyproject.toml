@@ -13,18 +13,16 @@
 # limitations under the License.
 
 [build-system]
-requires = ["setuptools>=61.0.0,<72.0.0"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "alphafold"
 dynamic = ["version"]
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 description = "An implementation of the inference pipeline of AlphaFold v2.0. This is a completely new model that was entered as AlphaFold2 in CASP14 and published in Nature."
-authors = [
-    {name = "DeepMind", email = "alphafold@deepmind.com"},
-]
-license = {text = "Apache License, Version 2.0"}
+authors = [{ name = "DeepMind", email = "alphafold@deepmind.com" }]
+license = { text = "Apache License, Version 2.0" }
 readme = "README.md"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -39,28 +37,29 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "absl-py==1.0.0",
-    "biopython==1.79",
-    "dm-haiku==0.0.12",
-    "docker==5.0.0",
-    "jax==0.4.26",
-    "matplotlib==3.8.0",
-    "ml-collections==0.1.0",
-    "numpy==1.24.3",
-    "tensorflow-cpu==2.16.1",
+    "absl-py",
+    "biopython",
+    "dm-haiku",
+    "docker",
+    "jax",
+    "matplotlib",
+    "ml-collections",
+    "numpy",
+    "openmm",
+    "tensorflow-cpu",
 ]
 
 [project.optional-dependencies]
-test = ["pytest<8.5.0"]
+test = ["pytest"]
 
 [project.urls]
-Homepage = "https://github.com/deepmind/alphafold"
+Homepage = "https://github.com/FridrichMethod/alphafold"
 
 [project.scripts]
 run_alphafold = "run_alphafold:main"
 
 [tool.setuptools.dynamic]
-version = {attr = "alphafold.version.__version__"}
+version = { attr = "alphafold.version.__version__" }
 
 [tool.setuptools]
 py-modules = ["run_alphafold"]
