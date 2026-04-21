@@ -13,7 +13,7 @@
 # limitations under the License.
 
 [build-system]
-requires = ["setuptools>=61.0.0,<72.0.0"]
+requires = ["setuptools>=61.0.0,<83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -38,7 +38,7 @@ classifiers = [
 ]
 dependencies = [
     "absl-py==1.0.0",
-    "biopython==1.79",
+    "biopython==1.85",
     "dm-haiku==0.0.12",
     "docker==5.0.0",
     "jax==0.4.26",
