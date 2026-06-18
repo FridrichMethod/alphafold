@@ -108,6 +108,27 @@ or before this date will be used. The lower bound for the date is 1976-01-01
 currently set is 2025-02-03 (date of last download from PDB used to generate the
 templates).
 
+`unpairedMsa` is an optional string containing a multiple sequence
+alignment (MSA) in A3M format. Providing an unpaired MSA allows you to guide
+the prediction process, e.g. predict different structural states of the protein
+using MSA clustering. Please refer to the
+[FAQ](https://alphafoldserver.com/faq#what-structure-templates-and-msa-are-used-by-alphafold-server-can-i-customize-these)
+for more details on unpaired MSAs and how they are used.
+
+`templates` is an optional list of dictionaries that allows you to provide
+custom structural templates.
+
+*   `mmcif` is a string containing the mmCIF file content for the template.
+*   `queryIndices` is a list O-based indices in the query sequence, defining the
+    mapping from query residues to template residues.
+*   `templateIndices` is a list of O-based indices in the template sequence,
+    specifying the mapping from query residues to template residues defined in
+    the mmCIF file. Note that unresolved mmCIF residues must be taken into
+    account when specifying template indices.
+
+Note: `queryIndices` and `templateIndices` are parallel arrays where
+`queryIndices[i]` maps to `templateIndices[i]`.
+
 ```json
 {
   "proteinChain": {
@@ -136,7 +157,15 @@ templates).
     ],
 
     "count": 1,
-    "maxTemplateDate": "2018-01-20"
+    "maxTemplateDate": "2018-01-20",
+    "unpairedMsa": ">query\nPREACHINGS\n>unpaired seq 1\nPREA--INGS",
+    "templates": [
+      {
+        "mmcif": ...,
+        "queryIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "templateIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      }
+    ]
   }
 },
 {
