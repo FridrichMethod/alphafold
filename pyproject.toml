@@ -21,8 +21,10 @@ name = "alphafold"
 dynamic = ["version"]
 requires-python = ">=3.10"
 description = "An implementation of the inference pipeline of AlphaFold v2.0. This is a completely new model that was entered as AlphaFold2 in CASP14 and published in Nature."
-authors = [{ name = "DeepMind", email = "alphafold@deepmind.com" }]
-license = { text = "Apache License, Version 2.0" }
+authors = [
+    {name = "DeepMind", email = "alphafold@deepmind.com"},
+]
+license = {text = "Apache License, Version 2.0"}
 readme = "README.md"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -58,7 +60,7 @@ Homepage = "https://github.com/FridrichMethod/alphafold"
 run_alphafold = "run_alphafold:main"
 
 [tool.setuptools.dynamic]
-version = { attr = "alphafold.version.__version__" }
+version = {attr = "alphafold.version.__version__"}
 
 [tool.setuptools]
 py-modules = ["run_alphafold"]
